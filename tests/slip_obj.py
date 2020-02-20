@@ -1,0 +1,55 @@
+slip1 = {
+    'merchant_name': 'My check N023',
+    'city': 'N\'yalotha',
+    'address': 'N\'yalothe, the sleeping ciyt',
+    'phone_num': '7894521415',
+    'date': '15.11.19',
+    'time': '16:22',
+    'operation_type': 'REFUND',
+    'pos_id': '09992662',
+    'merchant_num': '4433555555444777',
+    'fin_service': 'KISS',
+    'something': 'AoE33244',
+    'card_number': '1514',
+    'card_holder': 'THRALL/GO\'EL',
+    'summ': 124.0,
+    'result': 'SUCCESS',
+    'auth_code': 'GHR4MN',
+    'ref_num': 123456789123,
+    'payment_type': 'Scanhit',
+    'file_link': 'The cake is a lie.',
+}
+
+slip = {
+    "address": "тестовый проезд, дом 19",
+    "auth_code": "123321",
+    "card_holder": "MAKSIM/SUKHANOV",
+    "card_number": "1721",
+    "city": "Тест",
+    "date": "2020-02-06",
+    "file_link": "\\\\Msk-vm-slip\\SLIP\\KG34\\2019\\01\\KG12345678998745632112365.pdf",
+    "fin_service": "MasterCard",
+    "merchant_name": "SET SVYAZNOY KG34",
+    "merchant_num": "990000006829",
+    "object_code": "KG34",
+    "operation_type": "Оплата",
+    "payment_type": "Введен ПИН-код",
+    "phone_num": "4957870333",
+    "pos_id": "00477484",
+    "ref_num": "900186288187",
+    "result": "ОДОБРЕНО",
+    "summ": '1721.0',
+    "time": "12:34",
+    'updated': '2020-02-06',
+}
+
+slip2 = {
+    **slip,
+    "ref_num": "900186288188",
+    "file_link": "\\\\Msk-vm-slip\\SLIP\\KG34\\2019\\01\\KG12345678998745632112368.pdf",
+}
+slip3 = {
+    **slip,
+    "ref_num": "900186288189",
+    "file_link": "\\\\Msk-vm-slip\\SLIP\\KG34\\2019\\01\\KG12345678998745632112369.pdf",
+}

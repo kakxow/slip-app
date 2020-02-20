@@ -1,0 +1,26 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = false
+
+[dev-packages]
+coverage = "*"
+pytest = "*"
+mypy = "*"
+
+[packages]
+flask = "*"
+wtforms = "*"
+sqlalchemy = "*"
+flask-sqlalchemy = "*"
+flask-wtf = "*"
+loguru = "*"
+connexion = {extras = ["swagger-ui"],version = "*"}
+flask-login = "*"
+flask-migrate = "*"
+flask-mail = "*"
+pyjwt = "*"
+gunicorn = "*"
+
+[requires]
+python_version = "3.7"

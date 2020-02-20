@@ -1,0 +1,29 @@
+{% macro render_field(field) %}
+  <div class="form-group">
+    {{ field.label }}
+    {{ field(class="form-control", **kwargs)|safe }}
+    {% if field.errors %}
+      <ul class=errors>
+      {% for error in field.errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro render_pagination(pagination, endpoint) %}
+  <div class=pagination>
+  {%- for page in pagination.iter_pages() %}
+    {% if page %}
+      {% if page != pagination.page %}
+        <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+      {% else %}
+        <strong>{{ page }}</strong>
+      {% endif %}
+    {% else %}
+      <span class=ellipsis>…</span>
+    {% endif %}
+  {%- endfor %}
+  </div>
+{% endmacro %}

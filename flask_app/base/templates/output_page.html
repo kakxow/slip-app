@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_pagination %}
+
+{% block content %}
+
+<input type="submit" name="download_all" value="All to csv" onclick="window.location='/download';">
+<input type="submit" name="download_page" value="All to csv" onclick="window.location='/download?page={{ pagination.page }}';">
+
+<table class="table-hover">
+  <thead>
+    <tr>
+      {% for key in ls[0].keys()|sort %}
+        {% if key != '_id' %}
+          <th onclick="sort_table('{{ loop.index0 }}')">
+            {{ key }}
+          </th>
+        {% else %}
+          <th>#</th>
+        {% endif %}
+      {% endfor %}
+    </tr>
+    <tr>
+      <th><input type="button"
+                 name="reset_filter"
+                 onclick="reset_filter()"
+                 value="reset"></th>
+      {% for key in ls[0].keys()|sort %}
+        {% if key != '_id' %}
+          <th>
+            <input type="text"
+                   id="filter{{ loop.index }}"
+                   name="filter_{{ key }}"
+                   onkeyup="table_filter({{ loop.index }})"
+                   placeholder="Filter"
+                   title="Type smth"
+                   size="3">
+          </th>
+        {% endif %}
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody id="output_table">
+    {% for el in ls %}
+    <tr>
+      <td>{{ el['_id'] }}</td>
+      {% for key, value in el|dictsort %}
+        {% if '\\Msk-vm-slip' in value|string %}
+          <td><a href="file:///{{ value }}">link</a></td>
+        {% elif key != '_id' %}
+          <td>{{ value }}</td>
+        {% endif %}
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+
+  <tfoot>
+    <th>#</th>
+    {% for key in ls[0].keys()|sort %}
+      {% if key != '_id' %}
+        <th id="{{ key }}">{{ key }}</th>
+      {% endif %}
+    {% endfor %}
+  </tfoot>
+</table>
+
+
+{{ render_pagination(pagination, "views.output_fn") }}
+
+
+<script type="text/javascript">summ()</script>
+{% endblock %}

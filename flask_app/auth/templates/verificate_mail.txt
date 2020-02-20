@@ -1,0 +1,11 @@
+Dear {{ user.username }},
+
+To verificate your email click on the following link:
+
+{{ url_for('.verify_mail', token=token, _external=True) }}
+
+If you have not register - simply ignore this message.
+
+Sincerely,
+
+Max

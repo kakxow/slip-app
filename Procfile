@@ -1,0 +1,1 @@
+web: gunicorn slip_app:app

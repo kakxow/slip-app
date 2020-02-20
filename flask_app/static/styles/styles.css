@@ -1,0 +1,33 @@
+table {
+  width: 100%;
+  table-layout: fixed;
+  word-wrap: break-word;
+  margin: 0;
+}
+td, th, tr {
+  border: 1px solid black;
+  padding: 2px;
+  font-size: 10px;
+}
+th {
+  font-size: 14px;
+}
+div {
+  width: 100%;
+  max-width: 320px;
+}
+input:invalid {
+    border-color: red;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+#sql_text {
+  font-family: monospace;
+}

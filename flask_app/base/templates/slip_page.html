@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+
+{% block content %}
+<div class="container">
+<!--
+<form action="/start_update/" method="post">
+  <label for="object_code">Object code</label>
+  <input
+    class="form-control"
+    id="object_code"
+    name="object_code"
+    placeholder="L001"
+    maxlength="8"
+    pattern="([\d]{8}\b)|([A-Z]{1,2}[\d]{2,3})"
+    title="Should be old format (8 digit Svyaznoy code) or new SAP format (1-2 capital letters and 2-3 digits.">
+  <button name="starter" type="submit" onclick="">Begin update</button>
+</form>
+-->
+<form action="/output?page=1" method=post onsubmit="return validate_all()">
+  {{ form.csrf_token }}
+  {{ render_field(form.object_code,
+                  placeholder="L001",
+                  minlength="4",
+                  maxlength="8",
+                  pattern="([\d]{8})|([A-Za-z]{1,2}[\d]{2,3})",
+                  title="Should be old format (8 digit Svyaznoy code) or new SAP code (1-2 capital letters and 2-3 digits.") }}
+  {{ render_field(form.pos_id,
+                  placeholder="Enter pos ID",
+                  type="number",
+                  min="1000",
+                  max="99999999",
+                  pattern="[\d]{4,8}",
+                  title="Should be a number up to 8 digits long.") }}
+  {{ render_field(form.start_date,
+                  type="date",
+                  max="2020-12-31",
+                  min="2018-01-01") }}
+  {{ render_field(form.end_date,
+                  type="date",
+                  max="2020-12-31",
+                  min="2018-01-01") }}
+  {{ render_field(form.auth_code,
+                  maxlength="6",
+                  minlength="6",
+                  pattern="[\w]{6}",
+                  title="Should be a 6 symbols long, only digits and letters.") }}
+  {{ render_field(form.card_number,
+                  placeholder="Enter last 4 digits of card number",
+                  minlength="4",
+                  maxlength="4",
+                  pattern="[\d]{4}",
+                  title="Should be last 4 digits of card number") }}
+  {{ render_field(form.ref_num,
+                  type="number",
+                  placeholder="12 digit number",
+                  min="100000000000",
+                  max="999999999999",
+                  pattern="[\d]{12}",
+                  title="Should be a 12 digits long number.") }}
+  {{ render_field(form.start_summ,
+                  minlength="1",
+                  maxlength="12",
+                  pattern="([\d]+[.,-][\d]{1,2})|([\d]+)") }}
+  {{ render_field(form.end_summ,
+                  minlength="1",
+                  maxlength="12",
+                  pattern="([\d]+[.,-][\d]{1,2})|([\d]+)") }}
+  <details>
+  <summary>Slow search here</summary>
+  {{ render_field(form.merchant_name,
+                  maxlength="100",
+                  pattern="[\w\s]+") }}
+
+
+  </details>
+  <input type="submit" class="btn btn-success" value="Search">
+</form>
+</div>
+<script type="text/javascript">set_date()</script>
+{% endblock %}
