@@ -137,6 +137,7 @@ dmypy.json
 
 /slip/logs
 /logs
+/.idea
 anonimize_example_db.py
 lets_try.py
 *.csv

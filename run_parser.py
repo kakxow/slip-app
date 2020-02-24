@@ -2,12 +2,14 @@ import sys
 from datetime import datetime, timedelta
 
 from loguru import logger
+from dotenv import load_dotenv
 
 from slip.run_single_table import main_single_table
 from config import slip_dir
 
 
 if __name__ == '__main__':
+    load_dotenv()
     logger.remove()
     logger.add(
         'logs/log_{time}.log',
@@ -19,7 +21,6 @@ if __name__ == '__main__':
         sys.stdout,
         level='INFO'
     )
-    # TODO: Add CLI.
     now = datetime.now()
     curr_month = f'{now.month:02}'
     prev_month = f'{(now - timedelta(now.day + 1)).month:02}'

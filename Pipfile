@@ -21,6 +21,7 @@ flask-migrate = "*"
 flask-mail = "*"
 pyjwt = "*"
 gunicorn = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.7"

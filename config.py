@@ -7,15 +7,12 @@ example_db_path = pth.join(pth.dirname(__file__), 'db', 'example_db.db')
 class Config:
     # Flask settings.
     ENV = os.getenv('FLASK_ENV', 'production')
-    DEBUG = os.getenv('FLASK_DEBUG', 0)
     TESTING = os.getenv('TESTING', 0)
     SECRET_KEY = os.getenv('SECRET_KEY', 'not_very_secret')
-    JSON_AS_ASCII = os.getenv('JSON_AS_ASCII', 0)
     # Flask-SQLAlchemy settings.
     SQLALCHEMY_DATABASE_URI = \
         os.getenv('DATABASE_URL', f'sqlite:///{example_db_path}')
-    SQLALCHEMY_TRACK_MODIFICATIONS = \
-        os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS', 0)
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     # Flask-Mail settings.
     MAIL_SERVER = os.getenv('MAIL_SERVER')
     MAIL_PORT = os.getenv('MAIL_PORT')
@@ -28,7 +25,7 @@ class Config:
     # API settings.
     SCHEMA_PATH = \
         pth.join(pth.dirname(__file__), 'flask_app', 'api', 'openapischema.yaml')
-
+    JSON_AS_ASCII = False
     DB_PASSWORD = os.getenv('DB_PASSWORD', 'SecurityFlaw')
 
 
