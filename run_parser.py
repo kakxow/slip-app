@@ -1,11 +1,47 @@
-import sys
+import argparse
 from datetime import datetime, timedelta
+import sys
+from typing import Tuple
 
-from loguru import logger
 from dotenv import load_dotenv
+from loguru import logger
 
-from slip.run_single_table import main_single_table
 from config import slip_dir
+from slip.run_single_table import main_single_table
+
+
+def get_months() -> Tuple[int, int]:
+    """
+    Returns current and previous months' numbers.
+
+    Returns
+    -------
+    Tuple[int, int]
+        Tuple of current month number and previous month number.
+
+    """
+    now = datetime.now()
+    curr_month = now.month
+    prev_month = (now - timedelta(now.day + 1)).month
+    return (curr_month, prev_month)
+
+
+def cli():
+    arg_parser = argparse.ArgumentParser(description='Run pdf parser')
+    arg_parser.add_argument('-t', '--threads', type=int, default=8, nargs='?',
+                            help='Specify number of threads to run.')
+    arg_parser.add_argument('-d', '--directory', default=slip_dir, nargs='?',
+                            help='Specify directory to run here.')
+    arg_parser.add_argument('-y', '--years', default=('2020',), nargs='*',
+                            help='Specify which years to cover.')
+    arg_parser.add_argument('-m', '--months', default=get_months(), nargs='*',
+                            type=int, help='Specify which months to cover.')
+
+    args = arg_parser.parse_args()
+    logger.info('Start!')
+    months = tuple(f'{i:02}' for i in args.months)
+    main_single_table(args.directory, args.years, args.threads, months, True)
+    logger.info('Finish!')
 
 
 if __name__ == '__main__':
@@ -21,16 +57,4 @@ if __name__ == '__main__':
         sys.stdout,
         level='INFO'
     )
-    now = datetime.now()
-    curr_month = f'{now.month:02}'
-    prev_month = f'{(now - timedelta(now.day + 1)).month:02}'
-    months = (curr_month, prev_month)
-
-    try:
-        threads = int(sys.argv[1])
-    except (ValueError, IndexError):
-        print('Restart with valid number of threads as 1st argument.')
-    else:
-        logger.info('Start!')
-        main_single_table(slip_dir, ('2020',), threads, months, True)
-        logger.info('Finish!')
+    cli()

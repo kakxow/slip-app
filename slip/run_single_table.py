@@ -17,8 +17,8 @@ kill_ = False
 def main_single_table(
     rootdir: str,
     years: Tuple[str],
-    thread_count: int = 4,
-    months: Optional[List[str]] = None,
+    thread_count: int,
+    months: Optional[Tuple[str]] = None,
     filter_ctime: bool = False,
 ) -> None:
     """
@@ -47,7 +47,7 @@ def main_single_table(
     """
     # Counters.
     counter_add = counter_error = 0
-    counter = []
+    counter: List[int] = []
     c = 0
     q_dicts = queue.Queue()  # Queue with parsed dicts to process and add commit.
     stopper: List[str] = []  # List where workers puts something when generator quits.
@@ -130,7 +130,7 @@ def t_loop(
 
     Returns
     -------
-    Tuple[List[Tuple[Base, dict]], int, int]
+    Tuple[List[dict], int, int]
         Returns :obj:`tuple` of :obj:`list` and two counters (:obj:`int`).
         List contains dictionary for instantiation of models.Slip.
 
@@ -160,7 +160,7 @@ def t_loop(
 def worker(
     gen: Iterator[os.DirEntry],
     stopper: List[str],
-    counter: list,
+    counter: List[int],
     error_paths: Set[str],
     filter_ctime: bool,
     latest_date: Optional[float],
