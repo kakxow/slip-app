@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<div class="row justify-content-center">
+  <h1>Admin tools</h1>
+</div>
+
+{% for user in users %}
+  <div class="row justify-content-center">
+    <form action="" method="POST" class="form-inline">
+
+      <div class="input-group mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">id</div>
+        </div>
+        <input type="text" class="form-control" name="id" value="{{user.id}}" readonly="true" size="1">
+      </div>
+
+      <div class="input-group mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">created</div>
+        </div>
+        <input type="text" class="form-control" name="created" value="{{user.date_created}}" readonly="true">
+      </div>
+
+      <div class="input-group mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">username</div>
+        </div>
+        <input type="text" class="form-control" name="username" value="{{user.username}}">
+      </div>
+
+      <div class="input-group mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">email</div>
+        </div>
+        <input type="text" class="form-control" name="email" value="{{user.email}}">
+      </div>
+
+      <div class="form-check mb-2 mr-sm-2">
+        <input type="checkbox" class="form-check-input" name="verified" {% if user.verified %}checked{% endif %}>
+        <label class="form-check-label" for="verified">verified</label>
+      </div>
+
+      <div class="form-check mb-2 mr-sm-2">
+        <input type="checkbox" class="form-check-input" name="admin_approved" {% if user.admin_approved %}checked{% endif %}>
+        <label class="form-check-label" for="admin_approved">approved</label>
+      </div>
+
+      <div class="form-check mb-2 mr-sm-2">
+        <input type="checkbox" class="form-check-input" name="admin_rights" {% if user.admin_rights %}checked{% endif %}>
+        <label class="form-check-label" for="admin_rights">admin</label>
+      </div>
+
+      <div class="input-group mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">query</div>
+        </div>
+        <input type="text" class="form-control" name="last_query" value="{{user.last_query}}">
+      </div>
+
+      <input type="submit" class="btn btn-primary mb-2" value="Change">
+    </form>
+  </div>
+{% endfor %}
+{% endblock %}
