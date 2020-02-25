@@ -54,7 +54,7 @@ def output_fn():
 
     logger.debug(f'Searching with:\n{search_form}')
     pagination = functions.get_from_db_paginate(search_form, page_id)
-    data = functions.get_data(pagination, error_handler=functions.page_error_handler)
+    data = functions.get_data(pagination, page_id, error_handler=functions.page_error_handler)
 
     if not data:
         # No result.
