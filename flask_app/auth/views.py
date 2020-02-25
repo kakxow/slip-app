@@ -1,5 +1,3 @@
-import platform
-
 from flask import redirect, url_for, flash, render_template, request
 from werkzeug.urls import url_parse
 from flask_login import current_user, login_user, logout_user
@@ -50,7 +48,7 @@ def logout():
     Logouts current user and redirects them to index.
     """
     logout_user()
-    return redirect(url_for('views.index'))
+    return redirect(url_for('.login'))
 
 
 @auth.route('/register', methods=['GET', 'POST'])
@@ -74,9 +72,9 @@ def register():
             user.verified = True
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now a registered user!'
-              'Verify your email and you can log in.')
+        flash('Congratulations, you are now a registered user!')
         if mail_flag:
+            flash('Verify your email and you can log in.')
             send_mail_verification_email(user)
         return redirect(url_for('.login'))
     return render_template('register.html', form=form)

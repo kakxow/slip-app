@@ -2,6 +2,18 @@
   <div class="form-group">
     {{ field.label }}
     {{ field(class="form-control", **kwargs)|safe }}
+    {% for error in field.errors %}
+      <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% macro render_field_horizontal(field) %}
+  <div class="form-group row">
+    {{ field.label(class="col-sm-3 col-form-label") }}
+    <div class="col-sm-9">
+      {{ field(class="form-control", **kwargs)|safe }}
+    </div>
     {% if field.errors %}
       <ul class=errors>
       {% for error in field.errors %}
@@ -13,17 +25,24 @@
 {% endmacro %}
 
 {% macro render_pagination(pagination, endpoint) %}
-  <div class=pagination>
-  {%- for page in pagination.iter_pages() %}
+<nav aria-label="...">
+  <ul class="pagination">
+  {% for page in pagination.iter_pages() %}
     {% if page %}
       {% if page != pagination.page %}
-        <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+        </li>
       {% else %}
-        <strong>{{ page }}</strong>
+        <li class="page-item active">
+          <a class="page-link" href="#">{{ page }}<span class="sr-only">(current)</span></a>
+        </li>
       {% endif %}
     {% else %}
-      <span class=ellipsis>…</span>
+      <li class="page-item disabled">
+      <a class="page-link" href="#">...</a>
+      </li>
     {% endif %}
-  {%- endfor %}
-  </div>
+  {% endfor %}
+  </ul>
 {% endmacro %}

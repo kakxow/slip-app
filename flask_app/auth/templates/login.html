@@ -1,8 +1,22 @@
-{% extends "auth_template.html" %}
-{% from "helper.html" import render_field %}
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
 
 {% block content %}
+<div class="row justify-content-center">
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+</div>
+<div class="row justify-content-center">
   <h1>Sign In</h1>
+</div>
+<div class="row justify-content-center">
   <form action="" method="post">
     {{ form.hidden_tag() }}
     {{ render_field(
@@ -13,12 +27,15 @@
         required="true"
       ) }}
     {{ render_field(form.password, required="true") }}
-    <p>
+    <div>
     	Forgot your password?
     	<a href="{{ url_for('.reset_password_request') }}">Click to reset password</a>
-    </p>
-    <p>{{ form.remember_me() }}{{ form.remember_me.label }}</p>
-    <p>{{ form.submit() }}</p>
+    </div>
+    <div class="checkbox">{{ form.remember_me()|safe }}{{ form.remember_me.label }}</div>
+    {{ form.submit(class="btn btn-success") }}
   </form>
-  <p>New User? <a href="{{ url_for('auth.register') }}">Click to Register!</a></p>
+</div>
+  <div class="row justify-content-center">
+  New User? <a href="{{ url_for('auth.register') }}">Click to Register!</a>
+</div>
 {% endblock %}

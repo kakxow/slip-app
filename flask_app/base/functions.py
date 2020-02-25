@@ -77,7 +77,7 @@ def prettify_result(input_: List[Slip]) -> List[Dict[str, str]]:
         List of enumerated dictionaries, where both keys and values are strings.
 
     """
-    exclude_list = ['something', 'updated']
+    exclude_list = ['something', 'updated', 'phone_num', 'result']
     result = [exclude_keys(el.to_json(), exclude_list)
               for el in input_]
     result = [{**el, '_id': str(i)} for i, el in enumerate(result, start=1)]

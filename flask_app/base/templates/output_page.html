@@ -2,35 +2,46 @@
 {% from "_formhelpers.html" import render_pagination %}
 
 {% block content %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 
-<input type="submit" name="download_all" value="All to csv" onclick="window.location='/download';">
-<input type="submit" name="download_page" value="All to csv" onclick="window.location='/download?page={{ pagination.page }}';">
+<button class="btn btn-outline-secondary" name="download_all" onclick="window.location='/download';">Download all</button>
+<button class="btn btn-outline-secondary" name="download_page" onclick="window.location='/download?page={{ pagination.page }}';">Download page</button>
 
-<table class="table-hover">
+<table class="table table-sm table-hover table-bordered">
   <thead>
     <tr>
       {% for key in ls[0].keys()|sort %}
         {% if key != '_id' %}
-          <th onclick="sort_table('{{ loop.index0 }}')">
+          <th scope="col" onclick="sort_table('{{ loop.index0 }}')">
             {{ key }}
           </th>
         {% else %}
-          <th>#</th>
+          <th scope="col">#</th>
         {% endif %}
       {% endfor %}
     </tr>
     <tr>
       <th><input type="button"
+                 class="btn btn-outline-secondary"
                  name="reset_filter"
                  onclick="reset_filter()"
-                 value="reset"></th>
+                 value="Reset"></th>
       {% for key in ls[0].keys()|sort %}
         {% if key != '_id' %}
           <th>
             <input type="text"
-                   id="filter{{ loop.index }}"
+                   class="form-control"
+                   id="filter{{ loop.index0 }}"
                    name="filter_{{ key }}"
-                   onkeyup="table_filter({{ loop.index }})"
+                   onkeyup="table_filter({{ loop.index0 }})"
                    placeholder="Filter"
                    title="Type smth"
                    size="3">
@@ -55,10 +66,10 @@
   </tbody>
 
   <tfoot>
-    <th>#</th>
+    <th scope="col">#</th>
     {% for key in ls[0].keys()|sort %}
       {% if key != '_id' %}
-        <th id="{{ key }}">{{ key }}</th>
+        <th scope="col" id="{{ key }}">{{ key }}</th>
       {% endif %}
     {% endfor %}
   </tfoot>
@@ -66,7 +77,6 @@
 
 
 {{ render_pagination(pagination, "views.output_fn") }}
-
 
 <script type="text/javascript">summ()</script>
 {% endblock %}

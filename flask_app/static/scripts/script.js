@@ -54,7 +54,7 @@ function validate_summ() {
 
 function sort_table(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-  table = document.getElementsByTagName("tbody")[0];
+  table = document.getElementById("output_table");
   switching = true;
   // Set the sorting direction to ascending:
   dir = "asc";
@@ -125,7 +125,7 @@ function table_filter(n) {
   var input, filter, table, tr, td, i;
   input = document.getElementById("filter" + n);
   filter = input.value.toLowerCase();
-  table = document.getElementsByTagName("tbody")[0];
+  table = document.getElementById("output_table");
   tr = table.getElementsByTagName("tr");
   for (i = 0; i < tr.length; i++) {
     td = tr[i].getElementsByTagName("td")[n];
@@ -164,19 +164,23 @@ function summ() {
 }
 
 function reset_filter() {
-  var inps = document.getElementsByTagName('input');
-  var table = document.getElementsByTagName("tbody")[0];
-  var tr = table.getElementsByTagName('tr');
-  for (i = 0; i < tr.length; i++) {
-    tr[i].style.display = "";
+  const inputs = document.getElementsByTagName('input');
+  const table = document.getElementById("output_table");
+  const rows = table.getElementsByTagName('tr');
+
+  for (i = 0; i < rows.length; i++) {
+    rows[i].style.display = "";
   }
-  for (var i = inps.length - 1; i >= 1; i--) {
-    inps[i].value = '';
+
+  for (let i = inputs.length - 1; i >= 1; i--) {
+    inputs[i].value = '';
   }
   sort_table(0);
-  var td1 = tr[0].getElementsByTagName('td')[0].innerHTML;
-  var td2 = tr[0].getElementsByTagName('td')[1].innerHTML;
-  if (td1 !== '1' && td2 !== '2') {sort_table(0);}
+
+  const index_1 = rows[0].getElementsByTagName('td')[0].innerHTML;
+  const index_2 = rows[1].getElementsByTagName('td')[0].innerHTML;
+  console.log(index_1, index_2);
+  if (index_1 !== '1' && index_2 !== '2') {sort_table(0);}
 }
 
 function set_date() {
@@ -185,7 +189,8 @@ function set_date() {
   var tday = new Date();
   if (!start_date.value) {
     start_date.value = tday.toISOString().slice(0, 8) + '01';
-  } else {
+  };
+  if (!end_date.value) {
     end_date.value = tday.toISOString().slice(0, 10);
   }
 }

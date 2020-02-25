@@ -65,7 +65,7 @@ class SlipSearch(FlaskForm):
         ]
     )
     ref_num = StringField(
-        'Reference Retrieval Number',
+        'RRN',
         [
             Length(min=12, max=12),
             regexp(r'[\d]{12}'),
