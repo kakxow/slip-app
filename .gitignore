@@ -1,3 +1,14 @@
+/slip/logs
+/logs
+/.idea
+anonimize_example_db.py
+lets_try.py
+*.csv
+*.sublime-project
+*.sublime-workspace
+launch_docker.sh
+*.bat
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -133,14 +144,3 @@ dmypy.json
 
 # pytype static type analyzer
 .pytype/
-
-
-/slip/logs
-/logs
-/.idea
-anonimize_example_db.py
-lets_try.py
-*.csv
-*.sublime-project
-*.sublime-workspace
-launch_docker.sh

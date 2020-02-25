@@ -22,6 +22,7 @@ flask-mail = "*"
 pyjwt = "*"
 gunicorn = "*"
 python-dotenv = "*"
+win32-setctime = "*"
 
 [requires]
 python_version = "3.7"

@@ -1,7 +1,5 @@
 alembic==1.4.0
-atomicwrites==1.3.0
 attrs==19.3.0
-Babel==2.7.0
 blinker==1.4
 certifi==2019.11.28
 chardet==3.0.4
@@ -10,7 +8,6 @@ clickclick==1.2.2
 colorama==0.4.3
 connexion==2.6.0
 coverage==5.0.3
-docutils==0.15.2
 Flask==1.1.1
 Flask-Login==0.5.0
 Flask-Mail==0.9.1
@@ -34,7 +31,6 @@ openapi-spec-validator==0.2.8
 packaging==20.1
 pluggy==0.13.1
 py==1.8.1
-Pygments==2.5.2
 PyJWT==1.7.1
 pyparsing==2.4.6
 pyrsistent==0.15.7
@@ -42,14 +38,9 @@ pytest==5.3.5
 python-dateutil==2.8.1
 python-dotenv==0.11.0
 python-editor==1.0.4
-pytz==2019.3
 PyYAML==5.3
 requests==2.23.0
 six==1.14.0
-sphinxcontrib-htmlhelp==1.0.2
-sphinxcontrib-jsmath==1.0.1
-sphinxcontrib-qthelp==1.0.2
-sphinxcontrib-serializinghtml==1.1.3
 SQLAlchemy==1.3.13
 swagger-ui-bundle==0.0.6
 typed-ast==1.4.1
