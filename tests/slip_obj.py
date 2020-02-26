@@ -1,24 +1,44 @@
-slip1 = {
-    'merchant_name': 'My check N023',
-    'city': 'N\'yalotha',
-    'address': 'N\'yalothe, the sleeping ciyt',
-    'phone_num': '7894521415',
-    'date': '15.11.19',
-    'time': '16:22',
-    'operation_type': 'REFUND',
-    'pos_id': '09992662',
-    'merchant_num': '4433555555444777',
-    'fin_service': 'KISS',
-    'something': 'AoE33244',
-    'card_number': '1514',
-    'card_holder': 'THRALL/GO\'EL',
-    'summ': 124.0,
-    'result': 'SUCCESS',
-    'auth_code': 'GHR4MN',
-    'ref_num': 123456789123,
-    'payment_type': 'Scanhit',
-    'file_link': 'The cake is a lie.',
-}
+import datetime as dt
+
+import factory
+
+from db import Slip
+
+start_date = dt.datetime(2019, 12, 1)
+end_date = dt.datetime(2020, 2, 1)
+
+
+class SlipFactory(factory.Factory):
+    class Meta:
+        model = Slip
+
+    merchant_name = factory.Faker('sentence')
+    city = factory.Faker('city')
+    address = factory.Faker('address')
+    phone_num = factory.Faker('phone_number')
+    date = factory.Faker('date_between', start_date=start_date, end_date=end_date)
+    time = factory.Faker('time_object')
+    operation_type = factory.Faker('random_element', elements=('Refund', 'Payment'))
+    pos_id = factory.Faker('numerify', text='########')
+    merchant_num = factory.Faker('numerify', text='################')
+    fin_service = factory.Faker('lexify')
+    something = factory.Faker('lexify')
+    card_number = factory.Faker('numerify', text='####')
+    card_holder = factory.Faker('name')
+    summ = factory.Faker('random_int', max=600000)
+    result = 'Success'
+    auth_code = factory.Faker('lexify', text='??????')
+    ref_num = factory.Faker('numerify', text='############')
+    payment_type = factory.Faker('sentence')
+    object_code = factory.Faker('random_element', elements=(
+        f'{factory.Faker("lexify", text="??")}{factory.Faker("numerify", text="##")}',
+        f'{factory.Faker("lexify", text="?")}{factory.Faker("numerify", text="###")}'))
+
+    @factory.lazy_attribute
+    def file_link(self):
+        return f'\\\\Msk-vm-slip\\SLIP\\{self.object_code}\\{self.date}\\{self.date}\\' \
+            f'{self.object_code}{factory.Faker("numerify", text="#####################")}.pdf'
+
 
 slip = {
     "address": "тестовый проезд, дом 19",

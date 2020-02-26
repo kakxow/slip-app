@@ -2,11 +2,13 @@ import os
 
 import pytest
 
+os.environ['DATABASE_URL'] = 'sqlite://'
 test_config_path = os.path.join(os.path.dirname(__file__), 'test_config.py')
 os.environ['FLASK_APPLICATION_SETTINGS'] = test_config_path
 
-from flask_app import create_app
+from flask_app import create_app, db_slip
 from flask_app.auth import db, models
+from .slip_obj import SlipFactory
 
 
 @pytest.fixture(scope='module')
@@ -21,6 +23,10 @@ def test_client():
 
 @pytest.fixture(scope='module')
 def init_database():
+    db_slip.create_all()
+    db.create_all()
+
+    db_slip.session.add_all([SlipFactory.build() for _ in range(10000)])
     user = models.User(
         username='test_user',
         email='test_user@test.test',
@@ -30,8 +36,8 @@ def init_database():
     db.session.add(user)
     db.session.commit()
     yield db
-    db.session.delete(user)
-    db.session.commit()
+    db_slip.drop_all()
+    db.drop_all()
 
 
 @pytest.fixture(scope='function')
@@ -44,7 +50,7 @@ def login(test_client):
 def test_index_get(test_client, init_database, login):
     response = test_client.get('/')
     assert response.status_code == 200
-    assert b'Reference Retrieval Number' in response.data
+    assert b'RRN' in response.data
 
 
 def test_index_get_no_login(test_client):
@@ -179,7 +185,7 @@ def test_output_get_pages(test_client, init_database, login):
 
 
 def test_output_get_pages_out_of_range(test_client, init_database, login):
-    response = test_client.get('/output?page=281')
+    response = test_client.get('/output?page=99999999')
     assert response.status_code == 404
 
 
@@ -188,7 +194,7 @@ def test_output_post_pages_out_of_range(test_client, init_database, login):
         'start_date': '2020-01-01',
         'end_date': '2020-01-02',
     }
-    response = test_client.post('/output?page=1281', data=form_data)
+    response = test_client.post('/output?page=99999999', data=form_data)
     assert response.status_code == 404
 
 
@@ -230,12 +236,12 @@ def test_download_get_no_login(test_client, init_database):
 def test_download_get(test_client, init_database, login):
     response = test_client.get('/download?page=1')
     assert response.status_code == 200
-    headers = b'merchant_name;city;address;phone_num;date;time;operation_type;pos_id;merchant_num;fin_service;card_number;card_holder'
+    headers = b'merchant_name;city;address;date;time;operation_type;pos_id;merchant_num;fin_service;card_number;card_holder'
     assert headers in response.data
 
 
 def test_download_get_out_of_range(test_client, init_database, login):
-    response = test_client.get('/download?page=345')
+    response = test_client.get('/download?page=99999999')
     assert response.status_code == 404
 
 
