@@ -127,13 +127,14 @@ class TestAuth(TestCase):
     def test_logout(self):
         self.test_login()
         url_index = self.get_url('views.index')
+        url_login = self.get_url('auth.login')
         url_logout = self.get_url('auth.logout')
 
         response1 = self.app.get(url_index)
         self.assertEqual(response1.status_code, 200)
         response2 = self.app.get(url_logout)
         self.assertEqual(response2.status_code, 302)
-        self.assertTrue(response2.location.endswith(url_index), response2.location)
+        self.assertTrue(response2.location.endswith(url_login), response2.location)
         response3 = self.app.get(url_index)
         self.assertEqual(response3.status_code, 302)
         self.assertEqual(response3.location, 'http://localhost/login?next=%2Findex')
