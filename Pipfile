@@ -23,6 +23,7 @@ pyjwt = "*"
 gunicorn = "*"
 python-dotenv = "*"
 win32-setctime = "*"
+atomicwrites = "*"
 
 [requires]
 python_version = "3.7"
