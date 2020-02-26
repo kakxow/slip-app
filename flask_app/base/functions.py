@@ -182,7 +182,9 @@ def save_file(page_id: int) -> io.BytesIO:
     """
     form = get_form_for_current_user()
     pagination = get_from_db_paginate(form, page_id)
-    data = get_data(pagination, error_handler=page_error_handler)
+    data = get_data(pagination, page_id, error_handler=page_error_handler)
+    if not data:
+        abort(404, 'Empty query.')
     result = prettify_result(data)
 
     temp = io.BytesIO()
