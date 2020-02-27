@@ -1,0 +1,82 @@
+{% macro render_field_group(field, name) %}
+  <div class="input-group mb-2 mr-sm-2">
+    <div class="input-group-prepend">
+      <div class="input-group-text">{{ name }}</div>
+    </div>
+    {{ field(class="form-control", **kwargs)|safe }}
+    {% for error in field.errors %}
+      <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% macro render_field_checkbox(field) %}
+  <div class="form-check mb-2 mr-sm-2">
+    {{ field(class="form-check-input") }}
+    {{ field.label(class="form-check-label") }}
+    {% for error in field.errors %}
+      <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% macro render_field(field) %}
+  <div class="form-group">
+    {{ field.label }}
+    {{ field(class="form-control", **kwargs)|safe }}
+    {% for error in field.errors %}
+      <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% macro render_user_form(form) %}
+<div class="row">
+  <form action="" method="POST" class="form-inline">
+    <div class="row no-gutters justify-content-left align-items-center">
+      {{ form.csrf_token }}
+      <div class="col-0">
+        {{ render_field_group(form.id, 'id', readonly="true", size="1") }}
+      </div>
+      <div class="col-2">
+        {{ render_field_group(form.date_created, 'created', readonly="true") }}
+      </div>
+      <div class="col-2">
+        {{ render_field_group(form.username, 'username') }}
+      </div>
+      <div class="col-2">
+        {{ render_field_group(form.email, 'email', size="100") }}
+      </div>
+      <div class="col-2">
+        {{ render_field_group(form.password, 'password', size="100") }}
+      </div>
+      <div class="col-0">
+        {{ render_field_checkbox(form.verified) }}
+      </div>
+      <div class="col-0">
+        {{ render_field_checkbox(form.admin_approved) }}
+      </div>
+      <div class="col-0">
+        {{ render_field_checkbox(form.admin_rights) }}
+      </div>
+      <!--
+      <div class="col-1">
+        {{ render_field_group(form.last_query, 'query') }}
+      </div>
+    -->
+      <div class="col-0">
+        {% if form.username.data %}
+          <input type="submit" class="btn btn-primary mb-2" value="Change">
+        {% else %}
+          <input type="submit" class="btn btn-success mb-2" value="Add">
+        {% endif %}
+      </div>
+      <div class="col-0 ">
+        {% if form.username.data %}
+          <a class="btn btn-danger btn-sm" name="delete" href="{{ url_for('.delete_user', id=form.id.data) }}">Delete</a>
+        {% endif %}
+      </div>
+    </div>
+  </form>
+</div>
+{% endmacro %}

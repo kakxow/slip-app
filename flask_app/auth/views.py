@@ -28,12 +28,17 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = models.User.query.filter_by(username=form.username.data).first()
+
         if not user or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('.login'))
         elif not user.verified:
             flash('Email not verified, check your mailbox.')
             return redirect(url_for('.login'))
+        elif not user.admin_approved:
+            flash('Admin didn\'t verify you, poke them!')
+            return redirect(url_for('.login'))
+
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':

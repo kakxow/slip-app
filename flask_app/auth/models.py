@@ -16,6 +16,8 @@ class User(UserMixin, db.Model):
     email = db.Column('email', db.String(128), unique=True, index=True)
     password_hash = db.Column('password', db.String(128))
     verified = db.Column('verified', db.Boolean(), default=False)
+    admin_approved = db.Column('admin_approved', db.Boolean(), default=False)
+    admin_rights = db.Column('admin_rights', db.Boolean(), default=False)
     date_created = db.Column('date created', db.DateTime(), default=datetime.now())
     last_query = db.Column('last query', db.String(512))
 
