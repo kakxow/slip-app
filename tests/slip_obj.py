@@ -1,4 +1,5 @@
 import datetime as dt
+from string import ascii_uppercase
 
 import factory
 
@@ -12,15 +13,15 @@ class SlipFactory(factory.Factory):
     class Meta:
         model = Slip
 
-    merchant_name = factory.Faker('sentence')
+    merchant_name = factory.Faker('text', max_nb_chars=100)
     city = factory.Faker('city')
     address = factory.Faker('address')
-    phone_num = factory.Faker('phone_number')
+    phone_num = factory.Faker('msisdn')
     date = factory.Faker('date_between', start_date=start_date, end_date=end_date)
     time = factory.Faker('time_object')
     operation_type = factory.Faker('random_element', elements=('Refund', 'Payment'))
     pos_id = factory.Faker('numerify', text='########')
-    merchant_num = factory.Faker('numerify', text='################')
+    merchant_num = factory.Faker('numerify', text='############')
     fin_service = factory.Faker('lexify')
     something = factory.Faker('lexify')
     card_number = factory.Faker('numerify', text='####')
@@ -29,14 +30,13 @@ class SlipFactory(factory.Factory):
     result = 'Success'
     auth_code = factory.Faker('lexify', text='??????')
     ref_num = factory.Faker('numerify', text='############')
-    payment_type = factory.Faker('sentence')
-    object_code = factory.Faker('random_element', elements=(
-        f'{factory.Faker("lexify", text="??")}{factory.Faker("numerify", text="##")}',
-        f'{factory.Faker("lexify", text="?")}{factory.Faker("numerify", text="###")}'))
+    payment_type = factory.Faker('text', max_nb_chars=50)
+    object_code = factory.Faker('bothify', text='??##', letters=ascii_uppercase)
+    updated = dt.datetime.today().date()
 
     @factory.lazy_attribute
     def file_link(self):
-        return f'\\\\Msk-vm-slip\\SLIP\\{self.object_code}\\{self.date}\\{self.date}\\' \
+        return f'\\\\Msk-vm-slip\\SLIP\\{self.object_code}\\{self.date.year}\\{self.date.month}\\' \
             f'{self.object_code}{factory.Faker("numerify", text="#####################")}.pdf'
 
 
@@ -73,3 +73,4 @@ slip3 = {
     "ref_num": "900186288189",
     "file_link": "\\\\Msk-vm-slip\\SLIP\\KG34\\2019\\01\\KG12345678998745632112369.pdf",
 }
+slips = (slip, slip2, slip3)

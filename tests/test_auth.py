@@ -1,16 +1,15 @@
-from unittest import TestCase
-import os
 from dataclasses import dataclass
-
-os.environ['DATABASE_URL'] = 'sqlite://'
-test_config_path = os.path.join(os.path.dirname(__file__), 'test_config.py')
-os.environ['FLASK_APPLICATION_SETTINGS'] = test_config_path
-
+import os
+from unittest import TestCase
 
 from flask import url_for
 
 from flask_app import create_app
 from flask_app.auth import db, models
+
+
+test_config_path = os.path.join(os.path.dirname(__file__), 'test_config.py')
+os.environ['FLASK_APPLICATION_SETTINGS'] = test_config_path
 
 
 @dataclass
