@@ -1,8 +1,11 @@
 import datetime as dt
+from functools import wraps
 from time import sleep
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Callable
 from multiprocessing import Process
 
+from flask import flash, redirect, url_for
+from flask_login import current_user
 from werkzeug.datastructures import ImmutableMultiDict
 
 from flask_app.auth.models import User
@@ -67,3 +70,16 @@ def run_delete_task() -> None:
         sleep(86400)
 
     proc = Process(target=worker)
+
+
+def admin_required(func: Callable) -> Callable:
+    """
+    Add this decorator to ensure current user is admin before calling view.
+    """
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if not current_user.admin_rights:
+            flash('You\'re not allowed here!')
+            return redirect(url_for('views.index'))
+        return func(*args, **kwargs)
+    return decorated_view
