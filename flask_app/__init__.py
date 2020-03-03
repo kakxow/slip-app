@@ -33,7 +33,7 @@ def create_app():
     db_slip.init_app(app)
 
     # Register base blueprint.
-    from .base.views import base_views
+    from .base.views import views as base_views
     from .admin.views import admin_bp
     app.register_blueprint(base_views)
     app.register_blueprint(admin_bp)

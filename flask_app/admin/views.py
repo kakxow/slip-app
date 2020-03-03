@@ -10,10 +10,10 @@ from flask import (
 from .utils import admin_required, make_forms, change_user, delete_user
 from .forms import UserForm, NewUserForm
 
-admin = Blueprint('admin', __name__, template_folder='templates', url_prefix='/admin')
+admin_bp = Blueprint('admin', __name__, template_folder='templates', url_prefix='/admin')
 
 
-@admin.route('/', methods=['GET', 'POST'])
+@admin_bp.route('/', methods=['GET', 'POST'])
 @admin_required
 def admin():
     """
@@ -30,7 +30,7 @@ def admin():
     return render_template('admin.html', forms=forms, new_form=new_form)
 
 
-@admin.route('/delete', methods=['GET'])
+@admin_bp.route('/delete', methods=['GET'])
 @admin_required
 def delete():
     """
@@ -42,4 +42,4 @@ def delete():
         flash(f'User {user.username} is deleted.')
     else:
         flash(f'User with id {user_id} does not exist.')
-    return redirect(url_for('.admin_panel'))
+    return redirect(url_for('.admin'))
