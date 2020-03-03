@@ -37,8 +37,7 @@ def init_database_auth(test_client):
     user = models.User(
         username='test_user',
         email='test_user@test.test',
-        verified=True,
-        admin_approved=True,
+        is_verified=True,
         is_active=True,
     )
     user.set_password('test')

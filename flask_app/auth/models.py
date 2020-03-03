@@ -12,15 +12,14 @@ from . import auth
 class User(UserMixin, db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column('username', db.String(64), unique=True, index=True)
-    email = db.Column('email', db.String(128), unique=True, index=True)
-    password_hash = db.Column('password', db.String(128))
-    verified = db.Column('verified', db.Boolean(), default=False)
-    admin_approved = db.Column('admin_approved', db.Boolean(), default=False)
-    admin_rights = db.Column('admin_rights', db.Boolean(), default=False)
-    date_created = db.Column('date created', db.DateTime(), default=datetime.now())
-    last_query = db.Column('last query', db.String(512))
-    is_active = db.Column('is_active', db.Boolean(), default=True)
+    username = db.Column('username', db.String(64), unique=True, index=True, nullable=False)
+    email = db.Column('email', db.String(128), unique=True, index=True, nullable=False)
+    password_hash = db.Column('password', db.String(128), nullable=False)
+    is_verified = db.Column('is_verified', db.Boolean(), default=False, nullable=False)
+    is_active = db.Column('is_active', db.Boolean(), default=False, nullable=False)
+    is_admin = db.Column('is_admin', db.Boolean(), default=False, nullable=False)
+    date_created = db.Column('date_created', db.DateTime(), default=datetime.now())
+    last_query = db.Column('last_query', db.String(512), nullable=True)
 
     def __repr__(self: 'User') -> str:
         return f'User {self.username}'

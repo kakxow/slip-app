@@ -1,4 +1,3 @@
-import datetime as dt
 import os
 from typing import Dict, Union
 
@@ -10,39 +9,38 @@ os.environ['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
 
 from flask_app.auth.models import User
 from flask_app.auth import db
-from flask_app.admin import utils
 
 admin = {
     'username': 'admin',
     'email': 'admin@admin.ad',
     'password_hash': '123456',
-    'verified': True,
-    'admin_approved': True,
-    'admin_rights': True,
+    'is_verified': True,
+    'is_active': True,
+    'is_admin': True,
 }
 user1 = {
     'username': 'user1',
     'email': 'user1@user1.ad',
     'password_hash': '123456',
-    'verified': True,
-    'admin_approved': True,
-    'admin_rights': False,
+    'is_verified': True,
+    'is_active': True,
+    'is_admin': False,
 }
 user2 = {
     'username': 'user2',
     'email': 'user2@user2.ad',
     'password_hash': '123456',
-    'verified': True,
-    'admin_approved': False,
-    'admin_rights': False,
+    'is_verified': True,
+    'is_active': False,
+    'is_admin': False,
 }
 user3 = {
     'username': 'user3',
     'email': 'user3@user3.ad',
     'password_hash': '123456',
-    'verified': False,
-    'admin_approved': False,
-    'admin_rights': False,
+    'is_verified': False,
+    'is_active': False,
+    'is_admin': False,
 }
 users = (user1, user2, user3, admin)
 
@@ -149,9 +147,9 @@ class TestAdminPost(TestAdminPage):
         'user_id': 11,
         'email': 'newmail@mail.ru',
         'username': 'test_user_name',
-        'verified': True,
-        'admin_approved': True,
-        'admin_rights': True,
+        'is_verified': True,
+        'is_active': True,
+        'is_admin': True,
         'password': '123456',
     }
 
@@ -207,7 +205,7 @@ class TestAdminIncorrectPost(TestAdminPage):
     def test_error_tags(self, change):
         error_tag = '<span style="color: red;">'
         data = change.data.decode('utf-8')
-        assert data.count(error_tag) == 2, data
+        assert data.count(error_tag) == 2
 
 
 class TestDeleteGetNoAdmin(TestAdminPage):

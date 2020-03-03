@@ -43,16 +43,13 @@
         {{ render_field_group(form.password, 'password', id=form.password.name~form_id, size="100", autocomplete="new-password") }}
       </div>
       <div class="col-0">
-        {{ render_field_checkbox(form.verified, id=form.verified.name~form_id) }}
-      </div>
-      <div class="col-0">
-        {{ render_field_checkbox(form.admin_approved, id=form.admin_approved.name~form_id) }}
-      </div>
-      <div class="col-0">
-        {{ render_field_checkbox(form.admin_rights, id=form.admin_rights.name~form_id) }}
+        {{ render_field_checkbox(form.is_verified, id=form.is_verified.name~form_id) }}
       </div>
       <div class="col-0">
         {{ render_field_checkbox(form.is_active, id=form.is_active.name~form_id) }}
+      </div>
+      <div class="col-0">
+        {{ render_field_checkbox(form.is_admin, id=form.is_admin.name~form_id) }}
       </div>
       <div class="col-0">
         {% if not new %}

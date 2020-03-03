@@ -33,10 +33,8 @@ def login():
             flash('Invalid username or password')
         elif not user.is_active:
             flash('This user is inactive. Poke admin!')
-        elif not user.verified:
+        elif not user.is_verified:
             flash('Email not verified, check your mailbox.')
-        elif not user.admin_approved:
-            flash('Admin didn\'t verify you, poke them!')
         else:
             login_user(user, remember=form.remember_me.data)
             next_page = request.args.get('next')
@@ -73,7 +71,9 @@ def register():
         )
         user.set_password(form.password.data)
         if not mail_flag:
-            user.verified = True
+            user.is_verified = True
+        if user.email.endswith('maxus.ru') or user.email.endswith('svyaznoy.ru'):
+            user.is_active = True
         db.session.add(user)
         db.session.commit()
         flash('Congratulations, you are now a registered user!')

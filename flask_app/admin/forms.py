@@ -19,10 +19,9 @@ class UserForm(FlaskForm):
     username = StringField('Username', validators=[Optional(), Length(min=4, max=64)])
     password = PasswordField('Password', validators=[Optional(), Length(min=4, max=128)])
     email = StringField('E-mail', validators=[Optional(), Email(), Length(max=128)])
-    verified = BooleanField('Verified')
-    admin_approved = BooleanField('Approved')
-    admin_rights = BooleanField('Admin')
+    is_verified = BooleanField('Verified')
     is_active = BooleanField('Active')
+    is_admin = BooleanField('Admin')
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()

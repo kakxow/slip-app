@@ -28,7 +28,7 @@ def delete_unverified_users() -> None:
     with SessionCM as sess:
         # print(sess.get_bind())
         q = sess.query(User). \
-            filter_by(verified=False). \
+            filter_by(is_verified=False). \
             filter(User.date_created < cutoff_date.date())
         # print(q, cutoff_date)
         old_unverified_users = q.all()
@@ -59,7 +59,7 @@ def admin_required(func: Callable) -> Callable:
     @wraps(func)
     @login_required
     def decorated_view(*args, **kwargs):
-        if not current_user.admin_rights:
+        if not current_user.is_admin:
             flash('You\'re not allowed here!')
             return redirect(url_for('views.index'))
         return func(*args, **kwargs)

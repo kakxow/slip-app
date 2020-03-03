@@ -15,8 +15,7 @@ class TestUser:
     username: str = 'test_user'
     email: str = 'test@email.com'
     password: str = 'test_password'
-    verified: bool = False
-    admin_approved: bool = True
+    is_verified: bool = False
     is_active: bool = True
 
     @classmethod
@@ -24,8 +23,7 @@ class TestUser:
         return {
             'username': 'test_user',
             'email': 'test@email.com',
-            'verified': False,
-            'admin_approved': True,
+            'is_verified': False,
             'is_active': True,
         }
 
@@ -66,7 +64,7 @@ class TestAuth(TestCase):
     def verify_user(self, username: str):
         with self._app.app_context():
             user = models.User.query.filter_by(username=TestUser.username).first()
-            user.verified = True
+            user.is_verified = True
             db.session.commit()
 
 
