@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 import os
 from unittest import TestCase
 
@@ -12,11 +11,21 @@ test_config_path = os.path.join(os.path.dirname(__file__), 'test_config.py')
 os.environ['FLASK_APPLICATION_SETTINGS'] = test_config_path
 
 
-@dataclass
 class TestUser:
     username: str = 'test_user'
     email: str = 'test@email.com'
     password: str = 'test_password'
+    is_verified: bool = False
+    is_active: bool = True
+
+    @classmethod
+    def to_dir(cls):
+        return {
+            'username': 'test_user',
+            'email': 'test@email.com',
+            'is_verified': False,
+            'is_active': True,
+        }
 
 
 class TestAuth(TestCase):
@@ -25,7 +34,7 @@ class TestAuth(TestCase):
         self._app = app
         with self._app.app_context():
             db.create_all()
-            user = models.User(username=TestUser.username, email=TestUser.email)
+            user = models.User(**TestUser.to_dir())
             user.set_password(TestUser.password)
             db.session.add(user)
             db.session.commit()
@@ -55,7 +64,7 @@ class TestAuth(TestCase):
     def verify_user(self, username: str):
         with self._app.app_context():
             user = models.User.query.filter_by(username=TestUser.username).first()
-            user.verified = True
+            user.is_verified = True
             db.session.commit()
 
 
@@ -69,8 +78,10 @@ class TestAuth(TestCase):
         url_location = self.get_url('views.index')
         self.verify_user(TestUser.username)
         response = self.login_(TestUser.username, TestUser.password)
+        print(response.data.decode('utf-8'))
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.location.endswith(url_location), response.location)
+
 
     def test_login_logged_in(self):
         self.test_login()
@@ -85,10 +96,8 @@ class TestAuth(TestCase):
         self.assertIn(b'Field must be between 4 and 128 characters long.', response.data)
 
     def test_login_bad_user_no_redir(self):
-        url = self.get_url('auth.login')
         response = self.login_('not_a_user', 'test')
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.location.endswith(url), response.location)
+        self.assertEqual(response.status_code, 200)
 
     def test_login_bad_user_redir(self):
         response = self.login_('not_a_user', 'test', True)
@@ -96,10 +105,8 @@ class TestAuth(TestCase):
         self.assertIn(b'Invalid username or password', response.data)
 
     def test_login_bad_pass_no_redir(self):
-        url = self.get_url('auth.login')
         response = self.login_(TestUser.username, 'test')
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(response.location.endswith(url), response.location)
+        self.assertEqual(response.status_code, 200)
 
     def test_login_bad_pass_redir(self):
         response = self.login_(TestUser.username, 'test', True)
@@ -302,3 +309,5 @@ class TestAuth(TestCase):
         TestUser.password = '123456'
         self.assertEqual(response.status_code, 302, response.data)
         self.assertTrue(response.location.endswith(url_location), response.location)
+
+# TODO: Check fro is_active and admin_approved

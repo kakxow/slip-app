@@ -14,7 +14,7 @@ PASSWORD = {'password': 'SecurityFlaw'}
 
 
 @pytest.fixture(scope='function')
-def post_slips(test_client):
+def post_slips(test_client, init_database):
     def poster(data: Any = [], params: str = ''):
         return test_client.post(API_URL, json=data, query_string=params)
     yield poster
@@ -24,14 +24,14 @@ def post_slips(test_client):
 
 
 @pytest.fixture
-def get_slips(test_client):
+def get_slips(test_client, init_database):
     def getter(params: str = ''):
         return test_client.get(API_URL, query_string=params)
     return getter
 
 
 @pytest.fixture
-def get_slip(test_client):
+def get_slip(test_client, init_database):
     def getter(date: str = '', ref_num: str = ''):
         url = f'{API_URL}/{date}/{ref_num}'
         return test_client.get(url)
@@ -39,7 +39,7 @@ def get_slip(test_client):
 
 
 @pytest.fixture
-def update_slip(test_client):
+def update_slip(test_client, init_database):
     def updater(date: str = '', ref_num: str = '', data: Any = [], params: str = ''):
         url = f'{API_URL}/{date}/{ref_num}'
         return test_client.put(url, json=data, query_string=params)
@@ -47,7 +47,7 @@ def update_slip(test_client):
 
 
 @pytest.fixture
-def delete_slip(test_client):
+def delete_slip(test_client, init_database):
     def deleter(date: str = '', ref_num: str = '', params: str = ''):
         url = API_URL + f'/{date}/{ref_num}'
         return test_client.delete(url, query_string=params)
