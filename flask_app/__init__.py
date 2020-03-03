@@ -33,13 +33,14 @@ def create_app():
     db_slip.init_app(app)
 
     # Register base blueprint.
-    from .base.views import views
-    from .admin.views import admin
-    app.register_blueprint(views)
-    app.register_blueprint(admin)
+    from .base.views import base_views
+    from .admin.views import admin_bp
+    app.register_blueprint(base_views)
+    app.register_blueprint(admin_bp)
 
     # Run background task.
     from .admin.utils import run_delete_task
-    run_delete_task()
+    if not app.config['TESTING']:
+        run_delete_task()
 
     return app

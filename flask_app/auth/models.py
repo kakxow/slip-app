@@ -20,6 +20,7 @@ class User(UserMixin, db.Model):
     admin_rights = db.Column('admin_rights', db.Boolean(), default=False)
     date_created = db.Column('date created', db.DateTime(), default=datetime.now())
     last_query = db.Column('last query', db.String(512))
+    is_active = db.Column('is_active', db.Boolean(), default=True)
 
     def __repr__(self: 'User') -> str:
         return f'User {self.username}'

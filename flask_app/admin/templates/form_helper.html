@@ -12,70 +12,60 @@
 
 {% macro render_field_checkbox(field) %}
   <div class="form-check mb-2 mr-sm-2">
-    {{ field(class="form-check-input") }}
-    {{ field.label(class="form-check-label") }}
+    {{ field(class="form-check-input", **kwargs) }}
+    {{ field.label(class="form-check-label", **kwargs) }}
     {% for error in field.errors %}
       <span style="color: red;">{{ error }}</span>
     {% endfor %}
   </div>
 {% endmacro %}
 
-{% macro render_field(field) %}
-  <div class="form-group">
-    {{ field.label }}
-    {{ field(class="form-control", **kwargs)|safe }}
-    {% for error in field.errors %}
-      <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-  </div>
-{% endmacro %}
-
-{% macro render_user_form(form) %}
+{% macro render_user_form(form, new = 0) %}
+{% set form_id = form.user_id.data %}
 <div class="row">
   <form action="" method="POST" class="form-inline">
-    <div class="row no-gutters justify-content-left align-items-center">
+    <div class="row no-gutters justify-content-left align-items-top">
+      <input id="new_user" name="new_user" type="hidden" value="{{ new }}">
       {{ form.csrf_token }}
       <div class="col-0">
-        {{ render_field_group(form.id, 'id', readonly="true", size="1") }}
+        {{ render_field_group(form.user_id, 'id', id=form.user_id.name~form_id, readonly="true", size="1") }}
       </div>
       <div class="col-2">
-        {{ render_field_group(form.date_created, 'created', readonly="true") }}
+        {{ render_field_group(form.date_created, 'created', id=form.date_created.name~form_id, readonly="true") }}
       </div>
       <div class="col-2">
-        {{ render_field_group(form.username, 'username') }}
+        {{ render_field_group(form.username, 'username', id=form.username.name~form_id) }}
       </div>
       <div class="col-2">
-        {{ render_field_group(form.email, 'email', size="100") }}
+        {{ render_field_group(form.email, 'email', id=form.email.name~form_id, size="100") }}
       </div>
       <div class="col-2">
-        {{ render_field_group(form.password, 'password', size="100") }}
+        {{ render_field_group(form.password, 'password', id=form.password.name~form_id, size="100", autocomplete="new-password") }}
       </div>
       <div class="col-0">
-        {{ render_field_checkbox(form.verified) }}
+        {{ render_field_checkbox(form.verified, id=form.verified.name~form_id) }}
       </div>
       <div class="col-0">
-        {{ render_field_checkbox(form.admin_approved) }}
+        {{ render_field_checkbox(form.admin_approved, id=form.admin_approved.name~form_id) }}
       </div>
       <div class="col-0">
-        {{ render_field_checkbox(form.admin_rights) }}
+        {{ render_field_checkbox(form.admin_rights, id=form.admin_rights.name~form_id) }}
       </div>
-      <!--
-      <div class="col-1">
-        {{ render_field_group(form.last_query, 'query') }}
-      </div>
-    -->
       <div class="col-0">
-        {% if form.username.data %}
+        {{ render_field_checkbox(form.is_active, id=form.is_active.name~form_id) }}
+      </div>
+      <div class="col-0">
+        {% if not new %}
           <input type="submit" class="btn btn-primary mb-2" value="Change">
         {% else %}
           <input type="submit" class="btn btn-success mb-2" value="Add">
         {% endif %}
       </div>
-      <div class="col-0 ">
-        {% if form.username.data %}
-          <a class="btn btn-danger btn-sm" name="delete" href="{{ url_for('.delete_user', id=form.id.data) }}">Delete</a>
-        {% endif %}
-      </div>
+      {% if not new %}
+        <div class="col-0">
+          <a class="btn btn-danger btn-mb" name="delete" href="{{ url_for('.delete', id=form_id) }}">X</a>
+        </div>
+      {% endif %}
     </div>
   </form>
 </div>

@@ -31,19 +31,18 @@ def login():
 
         if not user or not user.check_password(form.password.data):
             flash('Invalid username or password')
-            return redirect(url_for('.login'))
+        elif not user.is_active:
+            flash('This user is inactive. Poke admin!')
         elif not user.verified:
             flash('Email not verified, check your mailbox.')
-            return redirect(url_for('.login'))
         elif not user.admin_approved:
             flash('Admin didn\'t verify you, poke them!')
-            return redirect(url_for('.login'))
-
-        login_user(user, remember=form.remember_me.data)
-        next_page = request.args.get('next')
-        if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('views.index')
-        return redirect(next_page)
+        else:
+            login_user(user, remember=form.remember_me.data)
+            next_page = request.args.get('next')
+            if not next_page or url_parse(next_page).netloc != '':
+                next_page = url_for('views.index')
+            return redirect(next_page)
     return render_template('login.html', form=form)
 
 
