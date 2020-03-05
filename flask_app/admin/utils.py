@@ -39,9 +39,12 @@ def delete_unverified_users() -> None:
 
 
 def worker():
-    while True:
-        delete_unverified_users()
-        sleep(86400)
+    try:
+        while True:
+            delete_unverified_users()
+            sleep(5 * 24 * 60 * 60)  # wait for 5 days
+    except BaseException:  # Catch any exception and exit gracefully.
+        pass
 
 
 def run_delete_task() -> None:
