@@ -2,7 +2,9 @@ table {
 	table-layout:fixed;
 }
 td, th {
-  word-break: break-all;
+  word-break: normal;
+  overflow-wrap: break-word;
+  font-size: smaller;
 }
 input:invalid {
     border-color: red;
