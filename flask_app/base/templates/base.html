@@ -9,15 +9,24 @@
   <title>Slip App</title>
 </head>
 <body>
-  <nav class="navbar navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="d-flex flex-grow-1">
     <a class="navbar-brand" href="{{ url_for('views.index') }}">Slip App</a>
-    <ul class="nav navbar-nav navbar-right">
-      {% if current_user.is_authenticated %}
-        <li><a class="btn btn-warning" href="{{ url_for('auth.logout') }}">Log out</a></li>
-      {% else %}
-        <li><a class="btn btn-primary" href="{{ url_for('auth.login') }}">Log in</a></li>
-      {% endif %}
-    </ul>
+    </div>
+    <div class="navbar-collapse flex-grow-1 text-right" id="myNavbar">
+      <ul class="navbar-nav ml-auto flex-nowrap">
+        <li class="nav-item">
+          {% if current_user.is_authenticated %}
+            <span class="navbar-text">
+              Your're logged in as {{ current_user.username }}
+            </span>
+            <a class="btn btn-warning" href="{{ url_for('auth.logout') }}">Log out</a>
+          {% else %}
+            <a class="btn btn-primary" href="{{ url_for('auth.login') }}">Log in</a>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
   </nav>
   <div class="container-fluid">
     {% block content %}{% endblock %}
