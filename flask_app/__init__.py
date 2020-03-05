@@ -3,7 +3,8 @@ import connexion
 from loguru import logger
 
 from config import Config
-from db import Base
+from db import Base, Slip
+from flask_app.auth import db, models
 
 
 db_slip = SQLAlchemy(model_class=Base)
@@ -38,9 +39,23 @@ def create_app():
     app.register_blueprint(base_views)
     app.register_blueprint(admin_bp)
 
+    # Register shell context.
+    register_shellcontext(app)
+
     # Run background task.
     from .admin.utils import run_delete_task
     if not app.config['TESTING']:
         run_delete_task()
 
     return app
+
+
+def register_shellcontext(app):
+    def shell_context():
+        return {
+            'db': db,
+            'User': models.User,
+            'Slip': Slip,
+            'db_slip': db_slip,
+        }
+    app.shell_context_processor(shell_context)
