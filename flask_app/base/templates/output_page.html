@@ -21,7 +21,7 @@
       {% for key in ls[0].keys()|sort %}
         {% if key != '_id' %}
           <th scope="col" onclick="sort_table('{{ loop.index0 }}')">
-            {{ key }}
+            {{ key|replace('_', ' ') }}
           </th>
         {% else %}
           <th scope="col">#</th>
@@ -69,7 +69,7 @@
     <th scope="col">#</th>
     {% for key in ls[0].keys()|sort %}
       {% if key != '_id' %}
-        <th scope="col" id="{{ key }}">{{ key }}</th>
+        <th scope="col" id="{{ key }}">{{ key|replace('_', ' ') }}</th>
       {% endif %}
     {% endfor %}
   </tfoot>
