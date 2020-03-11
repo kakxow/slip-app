@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Simple API for slips
-  version: 0.1.0
+  version: 0.2.0
 servers:
   - url: http://127.0.0.1:5000/api
 paths:
@@ -59,12 +59,12 @@ paths:
             text/plain:
               schema:
                 type: string
+      security:
+        - basic: []
             
     post:
       summary: Add slips
       operationId: flask_app.api.api.add_slips
-      parameters:
-        - $ref: '#/components/parameters/password'
       requestBody:
         description: Full slip object
         required: true
@@ -88,6 +88,8 @@ paths:
             text/plain:
               schema:
                 type: string
+      security:
+        - basic: []
 
   /slips/{date}/{ref_num}:
     parameters:
@@ -119,11 +121,11 @@ paths:
             text/plain:
               schema:
                 type: string
+      security:
+        - basic: []
     put:
       summary: Update one slip
       operationId: flask_app.api.api.update_one_slip
-      parameters:
-        - $ref: '#/components/parameters/password'
       requestBody:
         description: Full slip object
         required: true
@@ -144,11 +146,11 @@ paths:
             text/plain:
               schema:
                 type: string
+      security:
+        - basic: []
     delete:
       summary: Delete one slip
       operationId: flask_app.api.api.delete_one_slip
-      parameters:
-        - $ref: '#/components/parameters/password'
       responses:
         204:
           description: Successfully deleted a slip
@@ -162,18 +164,14 @@ paths:
             text/plain:
               schema:
                 type: string
+      security:
+        - basic: []
 components:
-  parameters:
-    password:
-      name: password
-      in: query
-      description: Password for modification
-      required: true
-      style: form
-      schema:
-        type: string
-        minLength: 4
-        maxLength: 64
+  securitySchemes:
+    basic:
+      type: http
+      scheme: basic
+      x-basicInfoFunc: flask_app.api.api.basic_auth
   schemas:
     SlipModel:
       type: object

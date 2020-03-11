@@ -1,14 +1,32 @@
+import hashlib
+import hmac
 from typing import Dict, List, Tuple
 
 from flask import jsonify, abort, request
 
+from config import Config
 from flask_app.base.functions import get_from_db_paginate, get_data, page_error_handler
 from flask_app import db_slip
 from db import Slip
-from .utils import check_password, insert_slips, rrn_exists, format_dates, get_meta
+from .utils import insert_slips, rrn_exists, format_dates, get_meta
 
 
 __all__ = ['list_slips', 'add_slips', 'get_one_slip', 'update_one_slip', 'delete_one_slip']
+
+
+def basic_auth(username: str, password: str):
+    Config.SECRET_KEY
+    user_ok = hmac.compare_digest(username, Config.API_USER)
+    hashed_password: str = hashlib.sha512(
+        password.encode('utf-8') + Config.SECRET_KEY.encode('utf-8')
+    ).hexdigest()
+    pass_ok = hmac.compare_digest(
+        hashed_password,
+        Config.API_PASSWORD
+    )
+    if not (user_ok and pass_ok):
+        abort(401)
+    return {'username': username, 'password': password}
 
 
 def list_slips(
@@ -60,14 +78,9 @@ def list_slips(
     return jsonify(result)
 
 
-def add_slips(password: str) -> Tuple[str, int]:
+def add_slips() -> Tuple[str, int]:
     """
-    Adds slips from JSON to DB, if password is correct and JSON contents is valid.
-
-    Parameters
-    ----------
-    password
-        Password.
+    Adds slips from JSON to DB, if JSON contents is valid.
 
     Returns
     -------
@@ -75,7 +88,6 @@ def add_slips(password: str) -> Tuple[str, int]:
         Message and HTTP return code.
 
     """
-    check_password(password)
     slips: List[Dict[str, str]] = request.json
     slips_added_count = insert_slips(slips)
     if slips_added_count == 0:
@@ -111,8 +123,7 @@ def get_one_slip(date: str, ref_num: str) -> Dict[str, str]:
 
 def update_one_slip(
     date: str,
-    ref_num: str,
-    password: str
+    ref_num: str
 ) -> Tuple[str, int]:
     """
     Updates particular slip in DB, defined by date and ref_num.
@@ -123,8 +134,6 @@ def update_one_slip(
         Date as a string in format '%Y-%m-%d'.
     ref_num
         Numeric string, unique for every operation.
-    password
-        Password.
 
     Returns
     -------
@@ -132,7 +141,6 @@ def update_one_slip(
         Message and HTTP return code.
 
     """
-    check_password(password)
     new_slip = Slip(**format_dates(request.json)).to_dict()
     old_slip = rrn_exists(date, ref_num)
     new_link = new_slip['file_link']
@@ -149,8 +157,7 @@ def update_one_slip(
 
 def delete_one_slip(
     date: str,
-    ref_num: str,
-    password: str
+    ref_num: str
 ) -> Tuple[str, int]:
     """
     Deletes slip, defined by date and ref_num.
@@ -161,8 +168,6 @@ def delete_one_slip(
         Date as a string in format '%Y-%m-%d'.
     ref_num
         Numeric string, unique for every operation.
-    password
-        Password.
 
     Returns
     -------
@@ -170,7 +175,6 @@ def delete_one_slip(
         Message and HTTP return code.
 
     """
-    check_password(password)
     slip = rrn_exists(date, ref_num)
     if not slip:
         abort(404, f'No operation found with RRN {ref_num} and {date}.')

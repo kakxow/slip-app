@@ -1,16 +1,13 @@
 from typing import Dict, List, Union
 from urllib.parse import urlencode
 
-from flask import abort
 from flask_sqlalchemy import Pagination
 
 from datetime import datetime
 import datetime as dt
-from hmac import compare_digest
 
 from flask_app import db_slip
 from db import try_query, Slip
-from config import Config
 
 
 def get_meta(
@@ -135,21 +132,3 @@ def insert_slips(dicts: List[Dict[str, str]]) -> int:
     db_slip.session.commit()
 
     return counter_add
-
-
-def check_password(password: str):
-    """
-    Checks password against DB_PASSWORD environment variable, raises 401 if wrong.
-
-    Parameters
-    ----------
-    password
-        Password, passed with request.
-
-    Returns
-    -------
-    None
-
-    """
-    if not compare_digest(Config.DB_PASSWORD, password):
-        abort(401, 'Wrong password')

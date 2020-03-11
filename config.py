@@ -26,7 +26,8 @@ class Config:
     SCHEMA_PATH = \
         pth.join(pth.dirname(__file__), 'flask_app', 'api', 'openapischema.yaml')
     JSON_AS_ASCII = False
-    DB_PASSWORD = os.getenv('DB_PASSWORD', 'SecurityFlaw')
+    API_PASSWORD = os.getenv('DB_PASSWORD', 'password')
+    API_USER = os.getenv('API_USER', 'user')
 
 
 POPPLER_PATH = os.getenv(
