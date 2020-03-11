@@ -35,7 +35,9 @@
     {{ form.submit(class="btn btn-success") }}
   </form>
 </div>
-  <div class="row justify-content-center">
-  New User? <a href="{{ url_for('auth.register') }}">Click to Register!</a>
+<div class="row justify-content-center">
+  <div>
+    New User? <a href="{{ url_for('auth.register') }}">Click to Register!</a>
+  </div>
 </div>
 {% endblock %}
