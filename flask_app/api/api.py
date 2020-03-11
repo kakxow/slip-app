@@ -14,8 +14,7 @@ from .utils import insert_slips, rrn_exists, format_dates, get_meta
 __all__ = ['list_slips', 'add_slips', 'get_one_slip', 'update_one_slip', 'delete_one_slip']
 
 
-def basic_auth(username: str, password: str):
-    Config.SECRET_KEY
+def basic_auth(username: str, password: str, required_scopes=None):
     user_ok = hmac.compare_digest(username, Config.API_USER)
     hashed_password: str = hashlib.sha512(
         password.encode('utf-8') + Config.SECRET_KEY.encode('utf-8')
