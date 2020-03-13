@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, flash, redirect, url_for
-from flask import send_file, session, abort
+from flask import Response, session, abort, stream_with_context
 from flask_login import login_required
 from loguru import logger
 from werkzeug.datastructures import MultiDict
@@ -76,18 +76,15 @@ def output_fn():
 @login_required
 def download_file():
     """
-    Sends csv vile for page_id or all pages if page_id is 0.
+    Streams csv vile for page_id or all pages if page_id is 0.
     """
     page_id = request.args.get('page', 0, int)
     if page_id < 0:
         abort(404, f'Specify correct page number.')
-
-    file = functions.save_file(page_id)
     file_name = f'query_result_{("page_" + str(page_id)) if page_id else "all"}.csv'
-    return send_file(
-        file,
-        cache_timeout=0,
-        as_attachment=True,
-        attachment_filename=file_name,
-        mimetype='text/csv'
+
+    return Response(
+        stream_with_context(functions.stream_csv(page_id)),
+        mimetype='text/csv',
+        headers={'Content-Disposition': f'attachment; filename={file_name}'}
     )

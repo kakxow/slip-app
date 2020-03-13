@@ -17,13 +17,11 @@
 <form action="/output?page=1" method=post onsubmit="return validate_all()">
   {{ form.csrf_token }}
   {{ render_field_horizontal(form.object_code,
-                  placeholder="L001",
                   minlength="4",
                   maxlength="8",
                   pattern="([\d]{8})|([A-Za-z]{1,2}[\d]{2,3})",
                   title="Should be old format (8 digit Svyaznoy code) or new SAP code (1-2 capital letters and 2-3 digits.") }}
   {{ render_field_horizontal(form.pos_id,
-                  placeholder="Enter pos ID",
                   type="number",
                   min="1000",
                   max="99999999",
@@ -43,14 +41,12 @@
                   pattern="[\w]{6}",
                   title="Should be a 6 symbols long, only digits and letters.") }}
   {{ render_field_horizontal(form.card_number,
-                  placeholder="Enter last 4 digits of card number",
                   minlength="4",
                   maxlength="4",
                   pattern="[\d]{4}",
                   title="Should be last 4 digits of card number") }}
   {{ render_field_horizontal(form.ref_num,
                   type="number",
-                  placeholder="12 digit number",
                   min="100000000000",
                   max="999999999999",
                   pattern="[\d]{12}",
@@ -63,14 +59,6 @@
                   minlength="1",
                   maxlength="12",
                   pattern="([\d]+[.,-][\d]{1,2})|([\d]+)") }}
-  <details>
-  <summary>Slow search here</summary>
-  {{ render_field_horizontal(form.merchant_name,
-                  maxlength="100",
-                  pattern="[\w\s]+") }}
-
-
-  </details>
   <input type="submit" class="btn btn-success" value="Search">
 </form>
 </div>

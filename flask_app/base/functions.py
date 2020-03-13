@@ -2,9 +2,8 @@ import csv
 import io
 import json
 import operator
-import pickle
 import re
-from typing import List, Dict, Any, Optional, Callable
+from typing import List, Dict, Any, Optional, Callable, Iterator
 
 from flask import abort
 from flask_sqlalchemy import Pagination
@@ -164,41 +163,6 @@ def format_pos_id(s: Optional[str]) -> Optional[str]:
         return None
 
 
-def save_file(page_id: int) -> io.BytesIO:
-    """
-    Gets data from DB for current user (all or one page) and saves it
-    in bytes as .csv file.
-
-    Parameters
-    ----------
-    page_id
-        Page number to extract.  Use None if you want all data.
-
-    Returns
-    -------
-    io.BytesIO
-        Bytes buffer to be sent as file.
-
-    """
-    form = get_form_for_current_user()
-    pagination = get_from_db_paginate(form, page_id)
-    data = get_data(pagination, page_id, error_handler=page_error_handler)
-    if not data:
-        abort(404, 'Empty query.')
-    result = prettify_result(data)
-
-    temp = io.BytesIO()
-    with io.StringIO() as f:
-        w = csv.DictWriter(f, fieldnames=result[0], delimiter=';')
-        w.writeheader()
-        w.writerows(result)
-
-        temp.write(f.getvalue().encode('cp1251'))
-        temp.seek(0)
-
-    return temp
-
-
 def get_from_db_paginate(
     form: Dict[str, str],
     page_id: int,
@@ -321,3 +285,60 @@ def exclude_keys(
     for key in exclude:
         result.pop(key, None)
     return result
+
+
+def stream_csv(page_id: int) -> Iterator[bytes]:
+    """
+    Streams query result as utf-8-sig encoded csv-formatted string.
+
+    Parameters
+    ----------
+    page_id
+        Number of desired page.  Can be 0 to get all results.
+
+    Yields
+    -------
+    bytes
+        Returns utf-8-sig encoded string, representing file in csv format.
+
+    """
+    form = get_form_for_current_user()
+    pagination = get_from_db_paginate(form, page_id)
+    if page_id != 0:
+        data = get_data(pagination, page_id, error_handler=page_error_handler)
+        data_page = prettify_result(data)
+        yield csv_as_bytes(data_page)
+    else:
+        q = pagination.query
+        write_headers = True
+        for row in q.yield_per(1000):
+            data_all = prettify_result([row])
+            data_all[0].pop('_id')
+            yield csv_as_bytes(data_all, write_headers)
+            write_headers = False
+
+
+def csv_as_bytes(result: List[dict], write_headers: bool = True) -> bytes:
+    """
+    Writes content of result to the buffer as csv file, encodes with
+    utf-8-sig and returns bytes.
+
+    Parameters
+    ----------
+    result
+        List of dicts to write in buffer.
+    write_headers
+        Set false if you don't need headers.
+
+    Returns
+    -------
+    bytes
+        Returns utf-8-sig encoded string, representing file in csv format.
+
+    """
+    with io.StringIO() as f:
+        w = csv.DictWriter(f, fieldnames=result[0], delimiter=';')
+        if write_headers:
+            w.writeheader()
+        w.writerows(result)
+        return f.getvalue().encode('utf-8-sig')

@@ -1,6 +1,7 @@
 import os
 
 import pytest
+import werkzeug
 
 
 os.environ['DATABASE_URL'] = 'sqlite://'
@@ -35,7 +36,6 @@ def test_index_post(test_client, login):
 
 def test_index_with_session_form_data(test_client, init_database, login):
     form_data = {
-        'merchant_name': 'Some merchant_name',
         'object_code': 'LP31',
         'pos_id': '87654321',
         'start_date': '2020-01-01',
@@ -209,8 +209,13 @@ def test_download_get(test_client, init_database, login):
 
 
 def test_download_get_out_of_range(test_client, init_database, login):
-    response = test_client.get('/download?page=99999999')
-    assert response.status_code == 404
+    try:
+        response = test_client.get('/download?page=99999999')
+    except werkzeug.exceptions.NotFound:
+        assert True
+    else:
+        assert False, 'should be werkzeug.exceptions.NotFound raised'
+    # assert response.status_code == 404
 
 
 def test_download_post_no_login(test_client, init_database):
