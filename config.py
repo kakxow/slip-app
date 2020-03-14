@@ -1,3 +1,4 @@
+import hashlib
 import os
 import os.path as pth
 
@@ -26,10 +27,10 @@ class Config:
     SCHEMA_PATH = \
         pth.join(pth.dirname(__file__), 'flask_app', 'api', 'openapischema.yaml')
     JSON_AS_ASCII = False
-    API_PASSWORD = os.getenv(
-        'DB_PASSWORD',
-        '5693dc6ae18590585a2961c160a2f508a5b4692aa155bd39ae296803ff942ae26bd9c65edefd02511d3f419731c1fb97d7775774636594764c88f6f9ea15f18e'
-    )
+    PASSWORD = os.getenv('DB_PASSWORD', 'password')
+    API_PASSWORD = hashlib.sha512(
+        PASSWORD.encode('utf-8') + SECRET_KEY.encode('utf-8')
+    ).hexdigest()
     API_USER = os.getenv('API_USER', 'user')
 
 
