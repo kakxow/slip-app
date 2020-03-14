@@ -1,3 +1,4 @@
+import hashlib
 import os
 import os.path as pth
 
@@ -26,7 +27,11 @@ class Config:
     SCHEMA_PATH = \
         pth.join(pth.dirname(__file__), 'flask_app', 'api', 'openapischema.yaml')
     JSON_AS_ASCII = False
-    DB_PASSWORD = os.getenv('DB_PASSWORD', 'SecurityFlaw')
+    PASSWORD = os.getenv('DB_PASSWORD', 'password')
+    API_PASSWORD = hashlib.sha512(
+        PASSWORD.encode('utf-8') + SECRET_KEY.encode('utf-8')
+    ).hexdigest()
+    API_USER = os.getenv('API_USER', 'user')
 
 
 POPPLER_PATH = os.getenv(
